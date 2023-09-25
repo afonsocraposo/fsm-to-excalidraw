@@ -9,9 +9,6 @@ export const parsePython = (definition) => {
     // check if line is a state
     const state = line.match(/def (.*)\(/);
     if (state) {
-      if (state_name) {
-        transitions_map[state_name] = state_transitions;
-      }
       state_transitions = {};
       state_name = state[1];
     } else {
@@ -27,6 +24,10 @@ export const parsePython = (definition) => {
         const trigger = match[1];
         const target = match[2];
         state_transitions[trigger] = target;
+      } else {
+        if (state_name) {
+          transitions_map[state_name] = state_transitions;
+        }
       }
     }
   }
@@ -161,9 +162,9 @@ export function generatePython(transitionsMap, className = "FSM") {
       }
       code += `${FOUR_SPACES}@transition(trigger=${trigger}, target=${target})\n`;
     }
-    code += `${FOUR_SPACES}function ${state}() {\n`;
+    code += `${FOUR_SPACES}def ${state}():\n`;
     code += `${FOUR_SPACES}${FOUR_SPACES}// TODO: Implement the state logic\n`;
-    code += `${FOUR_SPACES}}\n\n`;
+    code += `${FOUR_SPACES}\n`;
   }
 
   return code.slice(0, -2);
