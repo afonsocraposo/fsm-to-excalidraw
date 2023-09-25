@@ -64,7 +64,7 @@ export const FlowchartToExcalidrawSkeletonConverter = new GraphConverter({
         label: {
           groupIds,
           text: getText(vertex),
-          fontSize,
+          fontSize: fontSize * 0.6,
           ...labelStyle,
         },
         link: vertex.link || null,
@@ -151,7 +151,7 @@ export const FlowchartToExcalidrawSkeletonConverter = new GraphConverter({
         strokeStyle: edge.stroke === "dotted" ? "dashed" : undefined,
         points,
         ...(edge.text
-          ? { label: { text: getText(edge), fontSize, groupIds } }
+          ? { label: { text: getText(edge), fontSize: fontSize * 0.6, groupIds } }
           : {}),
         roundness: {
           type: 2,

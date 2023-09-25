@@ -1,9 +1,12 @@
 import mermaid from "mermaid";
+import { serializeAsJSON } from "@excalidraw/excalidraw";
 import { parseMermaid } from "../src/parseMermaid.js";
 import { renderExcalidraw } from "./initExcalidraw.js";
+import { parsePython, generateMermaid } from "../src/parsePython.js";
 
 const customTestEl = document.getElementById("custom-test")!;
 const btn = document.getElementById("render-excalidraw-btn")!;
+const btn_generate = document.getElementById("generate-excalidraw-btn")!;
 const errorEl = customTestEl.querySelector("#error")!;
 
 // Handle render to Excalidraw event
@@ -11,23 +14,18 @@ btn.addEventListener("click", async () => {
   errorEl.setAttribute("style", "display: none");
 
   try {
-    const mermaidInput = document.getElementById(
-      "mermaid-input"
+    const pythonInput = document.getElementById(
+      "python-input"
     ) as HTMLInputElement;
     const fontSizeInput = document.getElementById(
       "font-size-input"
     ) as HTMLInputElement;
 
-    const diagramDefinition = mermaidInput.value;
-    const customFontSize = Number(fontSizeInput.value);
+    const pythonDefinition = pythonInput.value;
+    const transitions_map = parsePython(pythonDefinition);
+    const diagramDefinition = generateMermaid(transitions_map);
 
-    // Render Mermaid diagram
-    const diagramEl = document.getElementById("custom-diagram")!;
-    const { svg } = await mermaid.render(
-      `custom-digaram`,
-      `%%{init: {"themeVariables": {"fontSize": "${customFontSize}px"}} }%%\n${diagramDefinition}`
-    );
-    diagramEl.innerHTML = svg;
+    const customFontSize = Number(fontSizeInput.value);
 
     // Parse Mermaid diagram and render to Excalidraw
     const parsedData = await parseMermaid(diagramDefinition, {
