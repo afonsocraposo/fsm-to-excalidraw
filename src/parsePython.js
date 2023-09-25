@@ -151,7 +151,8 @@ export function parseExcalidraw(elements) {
 }
 
 export function generatePython(transitionsMap, className = "FSM") {
-  let code = `class ${className}:\n`;
+  let code = `from prezi.fsm import FiniteStateMachine, transition\n\n\n`;
+  code += `class ${className}(FiniteStateMachine):\n`;
   for (const [state, transitions] of Object.entries(transitionsMap).reverse()) {
     for (let [trigger, target] of Object.entries(transitions)) {
       if (trigger && trigger !== "None") {
@@ -162,7 +163,7 @@ export function generatePython(transitionsMap, className = "FSM") {
       }
       code += `${FOUR_SPACES}@transition(trigger=${trigger}, target=${target})\n`;
     }
-    code += `${FOUR_SPACES}def ${state}():\n`;
+    code += `${FOUR_SPACES}def ${state}(self):\n`;
     code += `${FOUR_SPACES}${FOUR_SPACES}// TODO: Implement the state logic\n`;
     code += `${FOUR_SPACES}\n`;
   }
